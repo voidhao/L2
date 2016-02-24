@@ -6,16 +6,16 @@
 // Description : Hello World in C++, Ansi-style
 //============================================================================
 
-#include <iostream>
+#include <unistd.h>
 #include "netio/netio.h"
 using namespace std;
 
 int main(int argc, char** argv) {
-	cout << "!!!Hello World!!!" << endl; // prints !!!Hello World!!!
-	int id = 0;
-	id = netio::open_dev("eth1");
-	id = netio::open_dev("eth2");
-	id = netio::open_dev("eth3");
-	id = netio::open_dev("eth4");
+	netio::open_dev("eth1");
+	netio::netio_run();
+//    close(3);
+    auto pkts = netio::wait_rx_pkts();
+
+	netio::netio_stop();
 	return 0;
 }

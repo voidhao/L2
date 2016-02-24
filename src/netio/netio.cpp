@@ -6,48 +6,75 @@
 #include "detail/netio_detail.h"
 
 
-using namespace netio;
+namespace netio{
 
-int netio::open_dev(const char* dev)
+dev_info_ptr open_dev(const char* dev)
 {
-	// check double open
-	for(auto& desc :detail::all_open_devices){
-		int n = strcmp(desc->nifp->ni_name, dev);
-		if (n == 0){
-			return -1;
-		}
-	}
-
-	char buff[256]={0};
-	snprintf(buff, 256, "netmap:%s", dev);
-	nm_desc* desc = nm_open(buff, nullptr, 0, 0);
-	if(desc){
-		detail::all_open_devices.push_back(desc);
-		return detail::all_open_devices.size();
-	} else {
-		return -1;
-	}
+    return detail::dev_info_tools::new_dev_info(dev);
 }
 
-void netio::close_all_dev(){
-	for(auto& desc : detail::all_open_devices){
-		nm_close(desc);
-	}
+void close_all_dev(){
+    memset(detail::dev_info_reg, 0, sizeof(detail::dev_info_reg));
+    for(auto& info : detail::devices){
+        detail::dev_info_tools::delete_dev_info(info);
+    }
 }
 
-void netio::dump_dev(){
-	for(auto& desc : detail::all_open_devices){
-		printf("%s\n", desc->nifp->ni_name);
-	}
+void dump_dev(){
+//	for(auto& desc : detail::all_open_devices){
+//		printf("%s\n", desc->nifp->ni_name);
+//	}
 }
 
-void netio::wait_pkt(pkt_handler handler){
+void wait_pkt(pkt_handler handler){
 
 }
 
+dev_info::~dev_info(){
+    if(desc_){
+        nm_close(desc_);
+    }
+}
 
+int dev_info::fd()const{
+    return desc_->fd;
+}
 
+size_t dev_info::tx_rings_nr()const{
+    return desc_->nifp->ni_tx_rings;
+}
 
+size_t dev_info::rx_rings_nr()const{
+    return desc_->nifp->ni_rx_rings;
+}
+
+const char* dev_info::dev_name()const{
+    return desc_->nifp->ni_name;
+}
+
+bool netio_run(){
+    detail::rx_thread = new std::thread(detail::recieve_thread_func);
+//    detail::rx_thread->
+    return true;
+}
+
+void netio_stop(){
+    if(detail::rx_thread){
+        detail::rx_thread->join();
+        delete detail::rx_thread;
+        detail::rx_thread = nullptr;
+    }
+}
+
+rx_pkts wait_rx_pkts(){
+    if(!detail::rx_thread){
+        fprintf(stderr, "netio thread not run\n");
+        rx_pkts pkts;
+        return pkts;
+    }
+   return  detail::recieve_queue.wait();
+}
+} // namespace netio
 
 
 
