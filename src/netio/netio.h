@@ -1,18 +1,10 @@
 #ifndef _NETIO_NETIO_H_
 #define _NETIO_NETIO_H_
 
-
-#include <inttypes.h>
-#include <stddef.h>
 #include <sys/time.h>
-#include <functional>
-#include <memory>
 #include <atomic>
 #include "hdr.h"
 #include "pkt.h"
-
-typedef unsigned char byte_t;
-struct nm_desc;
 
 namespace netio{
 
@@ -23,9 +15,6 @@ struct pkt {
     timeval         stamp_{0,0};
 };
 
-using pkt_ptr       = std::shared_ptr<pkt>;
-using pkt_handler   = std::function<void(pkt_ptr)>;
-
 namespace detail{
     class dev_info_tools;
 }
@@ -33,6 +22,7 @@ namespace detail{
 class dev_info{
 public:
     const char*     dev_name()const;
+    nm_desc*        desc()const{return desc_;}
     size_t          tx_pkt_count()const{return tx_pkt_count_;}
     size_t          rx_pkt_count()const{return rx_pkt_count_;};
     size_t          tx_rings_nr()const;
@@ -57,9 +47,12 @@ dev_info_ptr  open_dev(const char*);
 void          close_all_dev();
 bool          netio_run();
 void          netio_stop();
-void          wait_pkt(pkt_handler handler);
 rx_pkts       wait_rx_pkts();
 void          dump_dev();
+size_t        imm_pkts_nr();
+size_t        delay_pkts_nr();
+size_t        total_rx_pkts();
+size_t        total_rx_pkts_size();
 
 } // namespace netio
 #endif /* _NETIO_NETIO_H_ */

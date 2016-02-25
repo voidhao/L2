@@ -5,21 +5,6 @@
 
 namespace netio{
 
-struct pkt_buff{
-    uint32_t        size_;
-    byte_t          data_[MTU_SIZE];
-    pkt_buff():size_{0}{
-    }
-    pkt_buff(byte_t* data, size_t size){
-        if(size <= MTU_SIZE){
-            memcpy(data_, data, size);
-            size_ = size;
-        } else {
-            size_ = 0;
-        }
-    }
-};
-
 class rx_pkt{
 public:
     const dev_info* dev()const{return dev_info_;}
@@ -28,27 +13,19 @@ public:
         stamp_ = stamp;
     }
 
-    rx_pkt(dev_info* dev, byte_t* data, size_t size):
-        dev_info_{dev},
-        stamp_{0,0}{
-        if (size <= MTU_SIZE){
-            memcpy(buff_, data, MTU_SIZE);
-            size_ = size;
-        } else {
-            size = 0;
-        }
-    }
-
-    rx_pkt(const rx_pkt& rhs) {
-        dev_info_ = rhs.dev_info_;
-        stamp_ = rhs.stamp_;
-        memcpy(buff_, rhs.buff_, rhs.size_);
-        size_ = rhs.size_;
-    }
-
+    rx_pkt(dev_info* dev, byte_t* data, size_t size);
+    rx_pkt(const rx_pkt& rhs);
     rx_pkt copy()const{
         rx_pkt pkt = *this;
         return std::move(pkt);
+    }
+
+    size_t size()const{
+        return size_;
+    }
+
+    byte_t const* data()const{
+        return buff_;
     }
 
     ~rx_pkt(){}
@@ -59,6 +36,19 @@ private:
     dev_info*       dev_info_;
     timeval         stamp_;
     size_t          size_;
+    byte_t          buff_[MTU_SIZE];
+};
+
+class tx_pkt{
+public:
+    tx_pkt(dev_info* dev, byte_t const* data, size_t size);
+    dev_info const* dev()const{return dev_info_;}
+    byte_t const*  data()const{return buff_;}
+private:
+    tx_pkt(const tx_pkt&) = delete;
+    tx_pkt& operator = (const tx_pkt&) = delete;
+    dev_info*       dev_info_{nullptr};
+    size_t          size_{0};
     byte_t          buff_[MTU_SIZE];
 };
 

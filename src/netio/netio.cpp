@@ -26,9 +26,6 @@ void dump_dev(){
 //	}
 }
 
-void wait_pkt(pkt_handler handler){
-
-}
 
 dev_info::~dev_info(){
     if(desc_){
@@ -73,6 +70,19 @@ rx_pkts wait_rx_pkts(){
         return pkts;
     }
    return  detail::recieve_queue.wait();
+}
+
+size_t        imm_pkts_nr(){
+    return detail::recieve_queue.imm_pkt_nr();
+}
+size_t        delay_pkts_nr(){
+    return detail::recieve_queue.delay_pkt_nr();
+}
+size_t        total_rx_pkts(){
+    return detail::rx_pkts_nr;
+}
+size_t        total_rx_pkts_size(){
+    return detail::rx_pkts_size;
 }
 } // namespace netio
 
