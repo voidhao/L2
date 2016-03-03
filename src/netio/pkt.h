@@ -7,7 +7,7 @@ namespace netio{
 
 class rx_pkt{
 public:
-    const dev_info* dev()const{return dev_info_;}
+    dev_info* dev()const{return dev_info_;}
     timeval stamp()const{return stamp_;}
     void stamp(const timeval& stamp){
         stamp_ = stamp;
@@ -36,20 +36,19 @@ private:
     dev_info*       dev_info_;
     timeval         stamp_;
     size_t          size_;
-    byte_t          buff_[MTU_SIZE];
+    byte_t          buff_[PKT_SIZE];
 };
 
 class tx_pkt{
 public:
-    tx_pkt(dev_info* dev, byte_t const* data, size_t size);
-    dev_info const* dev()const{return dev_info_;}
+    tx_pkt(byte_t const* data, size_t size);
     byte_t const*  data()const{return buff_;}
+    size_t size()const{return size_;}
 private:
     tx_pkt(const tx_pkt&) = delete;
     tx_pkt& operator = (const tx_pkt&) = delete;
-    dev_info*       dev_info_{nullptr};
     size_t          size_{0};
-    byte_t          buff_[MTU_SIZE];
+    byte_t          buff_[PKT_SIZE];
 };
 
 }// namespace netio

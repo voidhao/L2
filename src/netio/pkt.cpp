@@ -8,7 +8,7 @@ namespace netio{
 rx_pkt::rx_pkt(dev_info* dev, byte_t* data, size_t size):
     dev_info_{dev},
     stamp_{0,0}{
-    if (size <= MTU_SIZE){
+    if (size <= PKT_SIZE){
         memcpy(buff_, data, size);
         size_ = size;
     } else {
@@ -24,9 +24,8 @@ rx_pkt::rx_pkt(const rx_pkt& rhs) {
     size_ = rhs.size_;
 }
 
-tx_pkt::tx_pkt(dev_info* dev, byte_t const* data, size_t size):
-    dev_info_(dev){
-    if(size <= MTU_SIZE){
+tx_pkt::tx_pkt(byte_t const* data, size_t size){
+    if(size <= PKT_SIZE){
         memcpy(buff_, data, size);
         size_ = size;
     } else {
@@ -34,6 +33,8 @@ tx_pkt::tx_pkt(dev_info* dev, byte_t const* data, size_t size):
         size_ = 0;
     }
 }
+
+
 } // namespace
 
 

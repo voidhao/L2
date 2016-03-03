@@ -20,70 +20,52 @@ void close_all_dev(){
     }
 }
 
-void dump_dev(){
-//	for(auto& desc : detail::all_open_devices){
-//		printf("%s\n", desc->nifp->ni_name);
-//	}
-}
-
-
-dev_info::~dev_info(){
-    if(desc_){
-        nm_close(desc_);
-    }
-}
-
-int dev_info::fd()const{
-    return desc_->fd;
-}
-
-size_t dev_info::tx_rings_nr()const{
-    return desc_->nifp->ni_tx_rings;
-}
-
-size_t dev_info::rx_rings_nr()const{
-    return desc_->nifp->ni_rx_rings;
-}
-
-const char* dev_info::dev_name()const{
-    return desc_->nifp->ni_name;
-}
 
 bool netio_run(){
-    detail::rx_thread = new std::thread(detail::recieve_thread_func);
-//    detail::rx_thread->
+    detail::pkt_reciever.start();
+    detail::pkt_sender.start();
     return true;
 }
 
 void netio_stop(){
-    if(detail::rx_thread){
-        detail::rx_thread->join();
-        delete detail::rx_thread;
-        detail::rx_thread = nullptr;
-    }
+    detail::pkt_reciever.stop();
+    detail::pkt_sender.stop();
+    return;
 }
 
 rx_pkts wait_rx_pkts(){
-    if(!detail::rx_thread){
-        fprintf(stderr, "netio thread not run\n");
-        rx_pkts pkts;
-        return pkts;
-    }
-   return  detail::recieve_queue.wait();
+    return detail::pkt_reciever.wait();
 }
 
-size_t        imm_pkts_nr(){
-    return detail::recieve_queue.imm_pkt_nr();
+void send_pkt(dev_info_ptr dev, char const* data, size_t size){
+    auto pkt = std::make_shared<tx_pkt>((byte_t const*)data, size);
+    detail::pkt_sender.push(dev, pkt);
 }
-size_t        delay_pkts_nr(){
-    return detail::recieve_queue.delay_pkt_nr();
+
+size_t  rx_nr(){
+    return detail::pkt_reciever.rx_nr();
 }
-size_t        total_rx_pkts(){
-    return detail::rx_pkts_nr;
+
+size_t rx_size(){
+    return detail::pkt_reciever.rx_size();
 }
-size_t        total_rx_pkts_size(){
-    return detail::rx_pkts_size;
+
+size_t rx_drops(){
+    return detail::pkt_reciever.rx_drops();
 }
+
+size_t tx_nr(){
+    return detail::pkt_sender.tx_nr();
+}
+
+size_t tx_size(){
+    return detail::pkt_sender.tx_size();
+}
+
+size_t tx_drops(){
+    return detail::pkt_sender.tx_drops();
+}
+
 } // namespace netio
 
 

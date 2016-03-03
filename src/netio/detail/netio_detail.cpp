@@ -12,15 +12,8 @@ namespace detail{
 
 std::vector<dev_info_ptr>   devices;
 dev_info_ptr                dev_info_reg[MAX_DEV];
-recieve_queue_t             recieve_queue;
-send_queue_t                send_queue;
-std::thread*                rx_thread = nullptr;
-std::thread*                tx_thread = nullptr;
-std::atomic_size_t          rx_pkts_nr{0};
-std::atomic_size_t          rx_pkts_size{0};
-std::atomic_size_t          tx_pkts_nr{0};
-std::atomic_size_t          tx_pkts_size{0};
-
+pkt_sender_t                pkt_sender;
+pkt_reciever_t              pkt_reciever;
 
 dev_info* dev_info_tools::new_dev_info(nm_desc* desc){
     dev_info* info = nullptr;
@@ -43,7 +36,7 @@ dev_info* dev_info_tools::new_dev_info(const char* dev){
 
     char buff[256]={0};
     snprintf(buff, 256, "netmap:%s", dev);
-    nm_desc* desc = nm_open(buff, nullptr, 0, 0);
+    nm_desc* desc = nm_open(buff, nullptr, NETMAP_NO_TX_POLL, 0);
     if(!desc){
         return info;
     }
@@ -66,13 +59,6 @@ void dev_info_tools::delete_dev_info(dev_info* info){
         delete info;
     }
 }
-
-void recieve_queue_t::stop(){
-	std::lock_guard<std::mutex> lock(mutex_);
-	run_ = false;
-	cond_.notify_all();
-}
-
 
 
 }} // namespace

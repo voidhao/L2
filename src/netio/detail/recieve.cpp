@@ -2,44 +2,90 @@
 #define NETMAP_WITH_LIBS
 #include <net/netmap_user.h>
 #include "../netio.h"
+#include "../pkt.h"
 #include "netio_detail.h"
+#include "reciever.h"
 
 namespace netio{
 namespace detail{
 
-rx_pkts recieve_queue_t::wait(){
+
+pkt_reciever_t::pkt_reciever_t(){
+
+}
+
+pkt_reciever_t::~pkt_reciever_t(){
+
+}
+
+void pkt_reciever_t::push(rx_pkt_ptr pkt){
+    std::lock_guard<std::mutex> lock(mutex_);
+    if(pkts_.size() < RX_BUFF_SIZE){
+        pkts_.push_back(pkt);
+        cond_.notify_one();
+        stastics_rx(pkt->dev(), 1, pkt->size());
+    } else {
+        stastics_drops(pkt->dev(), 1);
+    }
+}
+
+void pkt_reciever_t::push(rx_pkts& pkts, dev_info_ptr dev, size_t size){
+    size_t nr = pkts.size();
     std::unique_lock<std::mutex> lock(mutex_);
-    run_ = true;
-    while(pkts_.empty() && run_){
-        cond_.wait(lock);
+    if(pkts_.empty()){
+        pkts_ = std::move(pkts);
+        lock.unlock();
+        cond_.notify_one();
+        stastics_rx(dev, nr, size);
+        return;
+    }
+    size_t rx_nr = 0;
+    size_t rx_drops = 0;
+    size_t rx_size = 0;
+    for(size_t i = 0; i < nr && pkts_.size() < RX_BUFF_SIZE; i++){
+        auto& pkt = pkts[i];
+        pkts_.push_back(pkt);
+
+        rx_nr++;
+        rx_size += pkt->size();
+
+    }
+    lock.unlock();
+    cond_.notify_one();
+    rx_drops = nr - rx_nr;
+    stastics_rx(dev, rx_nr, rx_size);
+    stastics_drops(dev, rx_drops);
+}
+
+void pkt_reciever_t::start(){
+    bool run = false;
+    if(run_.compare_exchange_strong(run, true)){
+        thread_.reset(new std::thread(&pkt_reciever_t::thread_func, this));
+    }
+}
+
+void pkt_reciever_t::stop(){
+    run_ = false;
+    cond_.notify_all();
+    if(thread_){
+        thread_->join();
+        thread_.reset();
+    }
+}
+rx_pkts pkt_reciever_t::wait(){
+    std::unique_lock<std::mutex> lock(mutex_);
+    while(run_){
+        if(pkts_.empty()){
+            cond_.wait(lock);
+            continue;
+        }
+        break;
     }
     return std::move(pkts_);
 }
 
-void recieve_queue_t::push(rx_pkts const& pkts){
-    std::unique_lock<std::mutex> lock(mutex_);
-    if (!run_){
-        return;
-    }
-    if(pkts_.empty()){
-        pkts_ = std::move(pkts);
-        cond_.notify_one();
-        lock.unlock();
-        imm_pkt_nr_ += pkts.size();
-        return;
-    } else {
-        for(auto& pkt : pkts){
-            pkts_.push_back(pkt);
-        }
-        cond_.notify_one();
-        lock.unlock();
-        delay_pkt_nr_ += pkts.size();
-        return;
-    }
-}
-
-void recieve_thread_func(){
-    printf("netmap recieve thread run\n");
+void pkt_reciever_t::thread_func(){
+    printf("rx thread run\n");
     std::vector<pollfd> poll_fds;
     for(auto& dev : devices){
         pollfd fd;
@@ -48,8 +94,9 @@ void recieve_thread_func(){
         fd.revents = 0;
         poll_fds.push_back(fd);
     }
-    for(;;){
-        int n = poll(poll_fds.data(), poll_fds.size(), -1);
+
+    while(run_){
+        int n = poll(poll_fds.data(), poll_fds.size(), 3000);
         if(n == -1 && errno == EINTR){
             continue;
         }
@@ -62,17 +109,17 @@ void recieve_thread_func(){
         }
         for(auto& fd : poll_fds){
             if(fd.revents & POLLIN){
-                dev_info* dev = dev_info_reg[fd.fd];
-                rx_pkts pkts = recieve_pkts_from_netmap(dev);
-                recieve_queue.push(pkts);
+                dev_info_ptr dev = dev_info_reg[fd.fd];
+                recieve(dev);
             }
         }
     }
-    printf("netmap recieve thread exit\n");
+    printf("rx thread exit\n");
 }
 
-rx_pkts recieve_pkts_from_netmap(dev_info* dev){
+void pkt_reciever_t::recieve(dev_info_ptr dev){
     rx_pkts pkts;
+    size_t rx_size = 0;
     nm_desc* desc = dev->desc();
     int ring_index = desc->cur_rx_ring;
     do{
@@ -82,23 +129,35 @@ rx_pkts recieve_pkts_from_netmap(dev_info* dev){
             uint32_t idx = ring->slot[i].buf_idx;
             byte_t*  buff = (byte_t*)NETMAP_BUF(ring, idx);
             uint32_t size = ring->slot[i].len;
-            rx_pkts_nr++;
-            rx_pkts_size += size;
+            rx_size += size;
             rx_pkt_ptr pkt = std::make_shared<rx_pkt>(dev, buff, size);
-
-            pkt->stamp(ring->ts);
             pkts.push_back(pkt);
-
             ring->cur = nm_ring_next(ring, i);
             ring->head = ring->cur;
         }
-
         ring_index++;
         if(ring_index > desc->last_rx_ring){
             ring_index = desc->first_rx_ring;
         }
     }while(ring_index != desc->cur_rx_ring);
-    return std::move(pkts);
+
+    if(pkts.size() == 1){
+        push(pkts[0]);
+    }else if(pkts.size() > 1){
+        push(pkts, dev, rx_size);
+    }
+}
+
+void pkt_reciever_t::stastics_rx(dev_info_ptr dev, size_t nr, size_t size){
+    rx_nr_ += nr;
+    rx_size_ += size;
+    dev->rx_nr_ += nr;
+    dev->rx_size_ += size;
+}
+
+void pkt_reciever_t::stastics_drops(dev_info_ptr dev, size_t nr){
+    rx_drops_nr_  += nr;
+    dev->rx_drops_nr_ += nr;
 }
 
 }} // namespace
