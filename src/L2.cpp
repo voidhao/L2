@@ -9,6 +9,7 @@
 #include <unistd.h>
 #include <thread>
 #include "netio/netio.h"
+#include "conf/log.h"
 using namespace std;
 
 size_t total_pkts = 0;
@@ -68,14 +69,9 @@ void process(void){
     }
 }
 int main(int argc, char** argv) {
-	eth1 = netio::open_dev("eth2");
-	netio::netio_run();
-	std::thread* thread1 = new std::thread(process);
-    std::thread* thread2 = new std::thread(statics);
-    std::thread* thread3 = new std::thread(stastics);
-    for(;;){
-        netio::wait_rx_pkts();
-    }
-	netio::netio_stop();
+    conf::init_log();
+    zlog_info(sys_log, "system start");
+    zlog_debug(sys_log, "debug info");
+    zlog_info(user_log, "user login");
 	return 0;
 }
