@@ -118,10 +118,10 @@ void pkt_sender_t::send_pkts_to_netmap(dev_tx_queue const& queue){
 
         for(size_t i = 0; i < total_ring_nr &&  !stop_send; i++){
             netmap_ring* ring = nullptr;
-            uint32_t ri = desc->cur_rx_ring + i;
+            uint32_t ri = desc->cur_tx_ring + i;
             uint32_t current_slot = 0;
             uint32_t idx = 0;
-            if(ri > desc->last_rx_ring){
+            if(ri > desc->last_tx_ring){
                 ri -= total_ring_nr;
             }
             ring = NETMAP_TXRING(desc->nifp, ri);
