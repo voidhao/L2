@@ -24,6 +24,7 @@ void close_all_dev(){
 bool netio_run(){
     detail::pkt_reciever.start();
     detail::pkt_sender.start();
+    sleep(2);
     return true;
 }
 
