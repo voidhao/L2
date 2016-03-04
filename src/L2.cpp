@@ -70,8 +70,5 @@ void process(void){
 }
 int main(int argc, char** argv) {
     conf::init_log();
-    zlog_info(sys_log, "system start");
-    zlog_debug(sys_log, "debug info");
-    zlog_info(user_log, "user login");
 	return 0;
 }
