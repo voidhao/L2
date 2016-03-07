@@ -1,11 +1,11 @@
-#ifndef _NETIO_NETIO_DETAIL_H_
-#define _NETIO_NETIO_DETAIL_H_
+#ifndef _NETMAP_NETIO_DETAIL_H_
+#define _NETMAP_NETIO_DETAIL_H_
 
 #include "detail_hdr.h"
 #include "reciever.h"
 #include "send.h"
 
-namespace netio{
+namespace netmap{
 namespace detail{
 
 
@@ -28,4 +28,4 @@ extern pkt_reciever_t               pkt_reciever;
 
 
 }} // namespace
-#endif /* NETIO_DETAIL_H_ */
+#endif /* _NETMAP_NETIO_DETAIL_H_ */

@@ -6,7 +6,7 @@
 #include "detail/netio_detail.h"
 
 
-namespace netio{
+namespace netmap{
 
 dev_info_ptr open_dev(const char* dev)
 {

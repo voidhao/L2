@@ -8,7 +8,7 @@
 
 #include <unistd.h>
 #include <thread>
-#include "netio/netio.h"
+#include "netmap/netio.h"
 #include "conf/log.h"
 using namespace std;
 
@@ -16,34 +16,34 @@ size_t total_pkts = 0;
 size_t total_size = 0;
 time_t stamp;
 
-netio::dev_info_ptr eth1;
+netmap::dev_info_ptr eth1;
 
 void statics(){
     sleep(2);
     for(;;){
         char msg[] = "hello, world, hello world, hello world, hello world, hello world";
-        netio::send_pkt(eth1, msg, 50);
+        netmap::send_pkt(eth1, msg, 50);
     }
 }
 
 void stastics(){
     size_t rx_nr, rx_size, rx_drops;
     size_t tx_nr, tx_size, tx_drops;
-    rx_nr = netio::rx_nr();
-    rx_size = netio::rx_size();
-    rx_drops = netio::rx_drops();
-    tx_nr = netio::tx_nr();
-    tx_size = netio::tx_size();
-    tx_drops = netio::tx_drops();
+    rx_nr = netmap::rx_nr();
+    rx_size = netmap::rx_size();
+    rx_drops = netmap::rx_drops();
+    tx_nr = netmap::tx_nr();
+    tx_size = netmap::tx_size();
+    tx_drops = netmap::tx_drops();
     int interval = 5;
     for(;;){
         sleep(interval);
-        size_t n_rx_nr = netio::rx_nr();
-        size_t n_rx_size = netio::rx_size();
-        size_t n_rx_drops = netio::rx_drops();
-        size_t n_tx_nr = netio::tx_nr();
-        size_t n_tx_size = netio::tx_size();
-        size_t n_tx_drops = netio::tx_drops();
+        size_t n_rx_nr = netmap::rx_nr();
+        size_t n_rx_size = netmap::rx_size();
+        size_t n_rx_drops = netmap::rx_drops();
+        size_t n_tx_nr = netmap::tx_nr();
+        size_t n_tx_size = netmap::tx_size();
+        size_t n_tx_drops = netmap::tx_drops();
         size_t d_rx_nr = (n_rx_nr - rx_nr)/interval;
         size_t d_rx_size = (n_rx_size - rx_size)/interval;
         size_t d_rx_drops = (n_rx_drops -rx_drops)/interval;
@@ -65,7 +65,7 @@ void stastics(){
 }
 void process(void){
     for(;;){
-        auto pkts = netio::wait_rx_pkts();
+        auto pkts = netmap::wait_rx_pkts();
     }
 }
 int main(int argc, char** argv) {

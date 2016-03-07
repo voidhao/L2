@@ -1,9 +1,9 @@
-#ifndef _NETIO_PKT_H_
-#define _NETIO_PKT_H_
+#ifndef _NETMAP_PKT_H_
+#define _NETMAP_PKT_H_
 
 #include "hdr.h"
 
-namespace netio{
+namespace netmap{
 
 class rx_pkt{
 public:
@@ -52,4 +52,4 @@ private:
 };
 
 }// namespace netio
-#endif /* _NETIO_PKT_H_ */
+#endif /* _NETMAP_PKT_H_ */

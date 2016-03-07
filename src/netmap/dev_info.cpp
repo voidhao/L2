@@ -4,7 +4,7 @@
 #include "hdr.h"
 #include "dev_info.h"
 
-namespace netio{
+namespace netmap{
 
 
 dev_info::~dev_info(){

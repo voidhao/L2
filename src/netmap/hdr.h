@@ -1,5 +1,5 @@
-#ifndef _NETIO_HDR_H_
-#define _NETIO_HDR_H_
+#ifndef _NETMAP_HDR_H_
+#define _NETMAP_HDR_H_
 
 #include <inttypes.h>
 #include <memory>
@@ -9,7 +9,7 @@
 
 class nm_desc;
 
-namespace netio{
+namespace netmap{
 
 const int PKT_SIZE = 1500;
 const int MAX_DEV  = 1024;
@@ -37,4 +37,4 @@ namespace detail{
 }
 
 }
-#endif /* HDR_H_ */
+#endif /* _NETMAP_HDR_H_ */

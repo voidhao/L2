@@ -6,7 +6,7 @@
 #include "netio_detail.h"
 #include "reciever.h"
 
-namespace netio{
+namespace netmap{
 namespace detail{
 
 

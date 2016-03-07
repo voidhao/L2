@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include "pkt.h"
 
-namespace netio{
+namespace netmap{
 
 rx_pkt::rx_pkt(dev_info* dev, byte_t* data, size_t size):
     dev_info_{dev},

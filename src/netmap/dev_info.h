@@ -1,7 +1,7 @@
-#ifndef _NETIO_DEV_INFO_H_
-#define _NETIO_DEV_INFO_H_
+#ifndef _NETMAP_DEV_INFO_H_
+#define _NETMAP_DEV_INFO_H_
 
-namespace netio{
+namespace netmap{
 
 class dev_info{
 public:
@@ -33,4 +33,4 @@ private:
 
 
 } // namespace
-#endif /* DEV_INFO_H_ */
+#endif /* _NETMAP_DEV_INFO_H_ */

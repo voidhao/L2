@@ -7,7 +7,7 @@
 #include "../netio.h"
 
 
-namespace netio{
+namespace netmap{
 namespace detail{
 
 std::vector<dev_info_ptr>   devices;

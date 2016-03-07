@@ -1,10 +1,10 @@
-#ifndef _NETIO_DETAIL_SEND_H_
-#define _NETIO_DETAIL_SEND_H_
+#ifndef _NETMAP_DETAIL_SEND_H_
+#define _NETMAP_DETAIL_SEND_H_
 
 
 #include "detail_hdr.h"
 
-namespace netio{
+namespace netmap{
 namespace detail{
 
 using dev_tx_queue      = std::pair<dev_info_ptr, tx_pkts>;
@@ -41,4 +41,4 @@ private:
 };
 
 }} // namesapce
-#endif /* SEND_H_ */
+#endif /* _NETMAP_DETAIL_SEND_H_ */

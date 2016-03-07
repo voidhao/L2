@@ -1,12 +1,12 @@
-#ifndef _NETIO_NETIO_H_
-#define _NETIO_NETIO_H_
+#ifndef _NETMAP_NETIO_H_
+#define _NETMAP_NETIO_H_
 
 
 #include "hdr.h"
 #include "dev_info.h"
 #include "pkt.h"
 
-namespace netio{
+namespace netmap{
 
 dev_info_ptr  open_dev(const char*);
 bool          netio_run();
@@ -21,4 +21,4 @@ size_t        tx_size();
 size_t        tx_drops();
 
 } // namespace netio
-#endif /* _NETIO_NETIO_H_ */
+#endif /* _NETMAP_NETIO_H_ */

@@ -1,5 +1,5 @@
-#ifndef _NETIO_DETAIL_DETAIL_HDR_H_
-#define _NETIO_DETAIL_DETAIL_HDR_H_
+#ifndef _NETMAP_DETAIL_DETAIL_HDR_H_
+#define _NETMAP_DETAIL_DETAIL_HDR_H_
 
 #include <mutex>
 #include <condition_variable>
@@ -10,7 +10,7 @@
 #include <net/netmap_user.h>
 #include "../hdr.h"
 
-namespace netio{
+namespace netmap{
 namespace detail{
 
 using cond = std::condition_variable;
@@ -21,4 +21,4 @@ const int  RX_BUFF_SIZE =  1024 * 10;
 
 }}
 
-#endif /* _NETIO_DETAIL_DETAIL_HDR_H_ */
+#endif /* _NETMAP_DETAIL_DETAIL_HDR_H_ */

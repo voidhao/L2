@@ -1,9 +1,9 @@
-#ifndef _NETIO_DETAIL_RECIEVER_H_
-#define _NETIO_DETAIL_RECIEVER_H_
+#ifndef _NETMAP_DETAIL_RECIEVER_H_
+#define _NETMAP_DETAIL_RECIEVER_H_
 
 #include "detail_hdr.h"
 
-namespace netio{
+namespace netmap{
 namespace detail{
 
 class pkt_reciever_t{
@@ -41,4 +41,4 @@ private:
 
 }} // namespace
 
-#endif /* _NETIO_DETAIL_RECIEVER_H_ */
+#endif /* _NETMAP_DETAIL_RECIEVER_H_ */
