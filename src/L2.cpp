@@ -6,69 +6,13 @@
 // Description : Hello World in C++, Ansi-style
 //============================================================================
 
-#include <unistd.h>
-#include <thread>
-#include "netmap/netio.h"
-#include "conf/log.h"
+
+#include <conf/log.h>
+#include <lonlife/netmap.h>
+
 using namespace std;
 
-size_t total_pkts = 0;
-size_t total_size = 0;
-time_t stamp;
 
-netmap::dev_info_ptr eth1;
-
-void statics(){
-    sleep(2);
-    for(;;){
-        char msg[] = "hello, world, hello world, hello world, hello world, hello world";
-        netmap::send_pkt(eth1, msg, 50);
-    }
-}
-
-void stastics(){
-    size_t rx_nr, rx_size, rx_drops;
-    size_t tx_nr, tx_size, tx_drops;
-    rx_nr = netmap::rx_nr();
-    rx_size = netmap::rx_size();
-    rx_drops = netmap::rx_drops();
-    tx_nr = netmap::tx_nr();
-    tx_size = netmap::tx_size();
-    tx_drops = netmap::tx_drops();
-    int interval = 5;
-    for(;;){
-        sleep(interval);
-        size_t n_rx_nr = netmap::rx_nr();
-        size_t n_rx_size = netmap::rx_size();
-        size_t n_rx_drops = netmap::rx_drops();
-        size_t n_tx_nr = netmap::tx_nr();
-        size_t n_tx_size = netmap::tx_size();
-        size_t n_tx_drops = netmap::tx_drops();
-        size_t d_rx_nr = (n_rx_nr - rx_nr)/interval;
-        size_t d_rx_size = (n_rx_size - rx_size)/interval;
-        size_t d_rx_drops = (n_rx_drops -rx_drops)/interval;
-        size_t d_tx_nr = (n_tx_nr - tx_nr)/interval;
-        size_t d_tx_size = (n_tx_size - tx_size)/interval;
-        size_t d_tx_drops = (n_tx_drops - tx_drops)/interval;
-        rx_nr = n_rx_nr;
-        rx_size = n_rx_size;
-        rx_drops = n_rx_drops;
-        tx_nr = n_tx_nr;
-        tx_size = n_tx_size;
-        tx_drops = n_tx_drops;
-        printf("Total:\n");
-        printf("rx nr:%10ld size:%10ld drops:%10ld\n", rx_nr, rx_size, rx_drops);
-        printf("rx nr:%10ld size:%10ld drops:%10ld\n", d_rx_nr, d_rx_size, d_rx_drops);
-        printf("tx nr:%10ld size:%10ld drops:%10ld\n", d_tx_nr, d_tx_size, d_tx_drops);
-        printf("---------------------------------\n");
-    }
-}
-void process(void){
-    for(;;){
-        auto pkts = netmap::wait_rx_pkts();
-    }
-}
 int main(int argc, char** argv) {
-    conf::init_log();
-	return 0;
+    return 0;
 }
