@@ -159,4 +159,7 @@
 			<resource resourceType="PROJECT" workspacePath="/L2"/>
 		</configuration>
 	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets">
+		<buildTargets/>
+	</storageModule>
 </cproject>

@@ -1,15 +1,14 @@
 #include <net/init.h>
-#include <net/detail/thread.h>
+#include <net/net_handler.h>
 namespace net{
 
 bool init(){
+    net_handler.stop();
     return true;
 }
 
 bool start(){
-    detail::net_thread_t thread;
-    thread.start();
-    thread.stop();
+    net_handler.start();
     return true;
 }
 

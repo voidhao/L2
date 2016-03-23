@@ -1,7 +1,6 @@
 #ifndef _NET_NIC_IP_ADDR_H_
 #define _NET_NIC_IP_ADDR_H_
 
-
 namespace net{
 namespace nic{
 

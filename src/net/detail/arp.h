@@ -13,7 +13,7 @@ public:
     lonlife::net::mac_addr arp(lonlife::net::ip4_addr ip)const;
 protected:
     void add_ip2mac(uint32_t ip, uint64_t mac);
-    friend void net::handle_arp(const char*, size_t);
+//    friend void net::handle_arp(const char*, size_t);
 private:
     std::unordered_map<uint32_t, uint64_t> ip2mac_;
     std::unordered_multimap<uint64_t, uint32_t> mac2ip_;
