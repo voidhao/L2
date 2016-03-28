@@ -1,3 +1,4 @@
+#include <tins/tins.h>
 #include <net/net_handler.h>
 #include <conf/iface.h>
 #include <lonlife/netmap.h>
@@ -63,6 +64,25 @@ bool net_handler_t::pkts_handler(lonlife::netmap::rx_pkt_ptr& pkt){
 }
 
 bool net_handler_t::arp_handler(lonlife::netmap::rx_pkt_ptr& pkt){
+    Tins::EthernetII  eth(pkt->data(), pkt->size());
+    auto data = eth.find_pdu<Tins::IP>();
+    auto inner = eth.inner_pdu();
+    auto inner_type = inner->pdu_type();
+    auto arp = eth.find_pdu<Tins::ARP>();
+    Tins::IP* ip = nullptr;
+    switch (inner_type){
+    case Tins::PDU::ARP:
+        zlog_info(sys_log, "arp pkt %ld", pkt->size());
+        break;
+    case Tins::PDU::IP:
+         ip =  (Tins::IP*)inner;
+        zlog_info(sys_log, "src ip %s, dest ip %s", ip->src_addr().to_string().c_str(), ip->dst_addr().to_string().c_str());
+        break;
+    default:
+        if (inner_type > Tins::PDU::MPLS){
+            zlog_info(sys_log, "unkonw pkt type %ld", inner_type);
+        }
+    }
     return false;
 }
 

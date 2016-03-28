@@ -1,13 +1,22 @@
 #ifndef _NET_ARP_ARP_H_
 #define _NET_ARP_ARP_H_
 
-#include <lonlife/net/addr.h>
+#include <comm_def.h>
 
 namespace net{
+namespace nic{
 
-    lonlife::net::mac_addr arp(uint32_t);
-    lonlife::net::ip4_addr rarp(uint64_t);
-    void handle_arp(const char* data, size_t size);
+    class arp_cache:noncopyable{
+    public:
+        MACAddress arp(const IPv4Address& ip)const;
+    protected:
+        bool handle_arp_pkt(const EthernetII& pkt);
+    private:
+        using arp_map = std::unordered_map<IPv4Address, MACAddress>;
+        arp_map              cache_;
+        mutable std::mutex   mutex_;
+    };
+}
 
 } // namespace net
 

@@ -43,6 +43,7 @@
 							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.linker.1018515645" name="Cross G++ Linker" superClass="cdt.managedbuild.tool.gnu.cross.cpp.linker">
 								<option id="gnu.cpp.link.option.libs.478449096" name="Libraries (-l)" superClass="gnu.cpp.link.option.libs" valueType="libs">
 									<listOptionValue builtIn="false" value="zlog"/>
+									<listOptionValue builtIn="false" value="tins"/>
 									<listOptionValue builtIn="false" value="tcmalloc"/>
 									<listOptionValue builtIn="false" value="pthread"/>
 									<listOptionValue builtIn="false" value="lonlife"/>
@@ -107,8 +108,10 @@
 							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.linker.1731800140" name="Cross G++ Linker" superClass="cdt.managedbuild.tool.gnu.cross.cpp.linker">
 								<option id="gnu.cpp.link.option.libs.1391415310" name="Libraries (-l)" superClass="gnu.cpp.link.option.libs" valueType="libs">
 									<listOptionValue builtIn="false" value="zlog"/>
+									<listOptionValue builtIn="false" value="tins"/>
 									<listOptionValue builtIn="false" value="tcmalloc"/>
 									<listOptionValue builtIn="false" value="pthread"/>
+									<listOptionValue builtIn="false" value="lonlife"/>
 								</option>
 								<option id="gnu.cpp.link.option.paths.244957197" name="Library search path (-L)" superClass="gnu.cpp.link.option.paths" valueType="libPaths">
 									<listOptionValue builtIn="false" value="/usr/local/lib"/>

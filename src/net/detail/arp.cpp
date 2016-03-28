@@ -19,6 +19,26 @@ lonlife::net::mac_addr arp_data_t::arp(lonlife::net::ip4_addr ip)const{
     return arp(ip.addr());
 }
 
+mac_address arp_data_t::arp(IPv4Address ip)const{
+    std::lock_guard<std::mutex> lock(mutex_);
+    auto it = arp_cache_.find(ip);
+    if(it != arp_cache_.end()){
+        return it->second;
+    }else{
+        return mac_address();
+    }
+}
+
+bool arp_data_t::handle_arp_pkt(const EthernetII& pdu){
+    auto arp = pdu.find_pdu<ARP>();
+    if (!arp){
+        return true;
+    }
+//    arp->opcode()
+    return true;
+}
+
+
 } // namespace detail
 } // namespace net
 
