@@ -46,7 +46,6 @@
 									<listOptionValue builtIn="false" value="tins"/>
 									<listOptionValue builtIn="false" value="tcmalloc"/>
 									<listOptionValue builtIn="false" value="pthread"/>
-									<listOptionValue builtIn="false" value="lonlife"/>
 								</option>
 								<option id="gnu.cpp.link.option.paths.1657001789" name="Library search path (-L)" superClass="gnu.cpp.link.option.paths" valueType="libPaths">
 									<listOptionValue builtIn="false" value="/usr/local/lib"/>
@@ -111,7 +110,6 @@
 									<listOptionValue builtIn="false" value="tins"/>
 									<listOptionValue builtIn="false" value="tcmalloc"/>
 									<listOptionValue builtIn="false" value="pthread"/>
-									<listOptionValue builtIn="false" value="lonlife"/>
 								</option>
 								<option id="gnu.cpp.link.option.paths.244957197" name="Library search path (-L)" superClass="gnu.cpp.link.option.paths" valueType="libPaths">
 									<listOptionValue builtIn="false" value="/usr/local/lib"/>

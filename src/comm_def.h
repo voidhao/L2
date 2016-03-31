@@ -16,7 +16,7 @@
 #include <time.h>
 #include <tins/tins.h>
 
-using namespace Tins;
+
 
 using byte_t            = unsigned char;
 using string_vector     = std::vector<std::string>;
@@ -28,6 +28,10 @@ using mac_address       = Tins::HWAddress<6>;
 using MACAddress        = Tins::HWAddress<6>;
 using unique_lock       = std::unique_lock<std::mutex>;
 using lock_guard        = std::lock_guard<std::mutex>;
+using IP				= Tins::IP;
+using UDP				= Tins::UDP;
+using TCP				= Tins::TCP;
+using PDU				= Tins::PDU;
 
 class noncopyable{
 protected:
