@@ -17,8 +17,6 @@
 #include <time.h>
 #include <tins/tins.h>
 
-
-
 using byte_t            = unsigned char;
 using string_vector     = std::vector<std::string>;
 using cond              = std::condition_variable;

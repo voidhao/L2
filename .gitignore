@@ -1,6 +1,7 @@
 Debug/
 Release/
 .settings/
+.idea/
 log/
 *.o
 
