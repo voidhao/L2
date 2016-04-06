@@ -62,6 +62,15 @@ void client_manager::remove_session(uint64_t uid){
 	}
 }
 
+session_ptr client_manager::make_session(IPv4Address src, uint16_t port, uint64_t uid){
+	auto sess = std::make_shared<session>();
+	sess->src_ip(src);
+	sess->sport(port);
+	sess->uid(uid);
+	add_session(sess);
+	return sess;
+}
+
 }
 
 

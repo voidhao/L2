@@ -10,15 +10,31 @@
 namespace switcher {
 
     struct outer_header {
-        Tins::EthernetII outer_;
+        Tins::EthernetII eth_;
+        Tins::IP 		 ip_;
+        Tins::UDP		 udp_;
 
         int fill(const byte_t *data, size_t size) {
             try {
-                outer_ = std::move(Tins::EthernetII(data, data + common::outer_len));
+                eth_ = std::move(Tins::EthernetII(data, data + common::eth_len));
+                ip_ = std::move(Tins::IP(data + common::eth_len, common::ip_len));
+                udp_ = std::move(Tins::UDP(data + common::eth_len + common::ip_len, common::udp_len));
             } catch (const std::runtime_error& e) {
                 return -1;
             }
             return common::outer_len;
+        }
+        IPv4Address src_addr()const{
+        	return ip_.src_addr();
+        }
+        IPv4Address dst_addr()const{
+        	return ip_.dst_addr();
+        }
+        uint16_t sport()const{
+        	return udp_.sport();
+        }
+        uint16_t dport()const{
+        	return udp_.dport();
         }
     };
 
@@ -69,7 +85,7 @@ namespace switcher {
             if (unlikely(inner < 0)) {
                 return err::INNER_INVALID;
             }
-            return size;
+            return 0;
         }
 
     };
