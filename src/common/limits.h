@@ -8,7 +8,7 @@ namespace common{
 	const size_t udp_len = 8;
 	const size_t tcp_len = 20;
 	const size_t vxlan_len = 8;
-	const size_t outer_len = eth_len + ip_len + udp_len + vxlan_len;
+	const size_t outer_len = eth_len + ip_len + udp_len;
 	const size_t inner_len = eth_len + ip_len;
 
 }
