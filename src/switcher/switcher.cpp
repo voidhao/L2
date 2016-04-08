@@ -2,6 +2,7 @@
 #include "tuple.h"
 #include "directions.h"
 #include <client/client_manager.h>
+#include <client/session.h>
 #include "path_manager.h"
 #include <nat/nat.h>
 #include <common/errors.h>
@@ -23,7 +24,20 @@ namespace switcher {
         if (e != 0) {
             return true;
         }
-        client_mgr_->client_tuple(tuple);
+        auto sess = client_mgr_->client_tuple(tuple);
+        if(unlikely(!sess)){
+        	return false;
+        }
+        int next_way = path_mgr_->get_way(client_way, 1);
+        switch (next_way){
+        case switch_way:
+        	break;
+        case out_way:
+        	nat_->nat_pkt(sess, tuple.inner_.ip_);
+        	break;
+        }
+
+
         return true;
     }
 

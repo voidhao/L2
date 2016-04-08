@@ -19,17 +19,15 @@ public:
 	void remove_session(IPv4Address ip, uint16_t port);
 	void remove_session(uint64_t uid);
 	template<typename Tuple>
-	bool client_tuple(const Tuple& tuple){
+	session_ptr client_tuple(const Tuple& tuple){
 		auto& outer = tuple.outer_;
-//		auto& meta = tuple.meta_;
-//		auto& inner = tuple.inner_;
-
-		auto conn_id = util::make_id(outer.src_addr(), outer.sport());
+		auto& meta = tuple.meta_;
 		auto sess = find_session(outer.src_addr(), outer.sport());
 		if(!sess){
-			sess =  make_session(outer.src_addr(), outer.sport(), 12345);
+			sess =  make_session(outer.src_addr(), outer.sport(), meta.uid());
 		}
-		return true;
+		sess->update();
+		return sess;
 	}
 private:
 	session_ptr make_session(IPv4Address src, uint16_t port, uint64_t uid);

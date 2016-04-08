@@ -4,7 +4,7 @@
 namespace err{
 
 	using err_t	= const int;
-
+	err_t	SUCCESS			= 0;
 	err_t	OUTER_INVALID	= 100;
 	err_t	INNER_INVALID	= 101;
 	err_t	META_INVALID	= 102;
