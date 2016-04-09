@@ -11,6 +11,10 @@ bool init(){
     }
 
     conf::read_conf();
+    ret = conf::read_gateway();
+    if(!ret){
+        return ret;
+    }
     auto ifaces = conf::read_iface();
     return true;
 }

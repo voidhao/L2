@@ -6,6 +6,7 @@
 namespace conf{
 
 static const char* conf_file = "conf/main.ini";
+static const char* gateway_file = "conf/gateway.ini";
 
 std::string manage_ip;
 uint16_t manage_port    = 0;
@@ -13,6 +14,8 @@ uint16_t client_port    = 0;
 uint16_t switch_port    = 0;
 uint16_t min_nat_port   = 0;
 uint16_t max_nat_port   = 0;
+
+std::map<std::string, std::vector<std::string>> gateways;	//store gateways from gateway.ini
 
 void dump_conf(){
     zlog_info(sys_log, "------------------------------------");
@@ -23,6 +26,30 @@ void dump_conf(){
     zlog_info(sys_log, "min nat port : %d", min_nat_port);
     zlog_info(sys_log, "max nat port : %d", max_nat_port);
     zlog_info(sys_log, "------------------------------------");
+}
+
+bool read_gateway() {
+	CSimpleIniA ini;
+	auto err = ini.LoadFile(gateway_file);
+	if (err != 0)
+	{
+		zlog_error(sys_log, "load %s failed", gateway_file);
+		return false;
+	}
+	CSimpleIniA::TNamesDepend sections, keys, values;
+	ini.GetAllSections(sections);
+	CSimpleIniA::TNamesDepend::const_iterator s, k, v;
+	std::vector<std::string> tmp;
+	for (s = sections.begin(); s != sections.end(); ++s)
+	{
+		ini.GetAllKeys(s->pItem, keys);
+		for (k = keys.begin(); k != keys.end(); ++k)
+		{
+			tmp.push_back(ini.GetValue(s->pItem, k->pItem, 0, 0));
+		}
+		gateways[s->pItem] = tmp;
+	}
+	return true;
 }
 
 void read_conf(){
