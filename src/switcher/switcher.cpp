@@ -33,7 +33,7 @@ namespace switcher {
         case switch_way:
         	break;
         case out_way:
-        	nat_->nat_pkt(sess, tuple.inner_.ip_);
+        	nat_->nat_client_pkt(sess->uid(), 1, tuple.inner_.ip_);
         	break;
         }
 

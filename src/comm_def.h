@@ -34,6 +34,7 @@ using TCP				= Tins::TCP;
 using PDU				= Tins::PDU;
 using frame_ptr			= std::shared_ptr<Tins::EthernetII>;
 using IPv4Address		= Tins::IPv4Address;
+using EthernetII		= Tins::EthernetII;
 using VxLAN				= std::array<byte_t, 8>;
 using error_t           = int;
 using namespace std::placeholders;

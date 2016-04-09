@@ -1,7 +1,7 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 2.0)
 project(L2)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall  -Wpessimizing-move -std=c++11")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -g -ggdb -std=c++11")
 
 include_directories(
         /usr/local/include
@@ -53,6 +53,7 @@ set(SOURCE_FILES
     src/global.h
     src/init.cpp
     src/init.h
+    src/nat/session_manager.cpp
     src/main.cpp src/switcher/directions.h)
 
 add_executable(L2 ${SOURCE_FILES})

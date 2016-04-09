@@ -4,6 +4,10 @@
 #include <comm_def.h>
 
 namespace nat {
+
+class nat_session;
+using nat_ptr = std::shared_ptr<nat_session>;
+
 namespace detail{
 struct in_key {
 	IPv4Address local_ip_;
@@ -31,9 +35,10 @@ struct in_key {
 static_assert(sizeof(in_key) == 16, "size of nat_key should be 16");
 
 struct out_key{
-	IPv4Address local_ip_;
+	IPv4Address origin_ip_;
 	uint16_t	proto_{0};
-	uint16_t	local_port_{0};
+	uint16_t	origin_port_{0};
+	uint32_t	client_id_{0};
 	bool operator == (const out_key& rhs)const{
 		return (memcmp(this, &rhs, sizeof(out_key)) == 0);
 	}
@@ -44,6 +49,12 @@ struct out_key{
 		return *(size_t*)this;
 	}
 };
+
+
+struct in_key in_key_from_nat(nat_ptr nat);
+struct out_key out_key_from_nat(nat_ptr nat);
+struct in_key in_key_from_ip(const IP& ip);
+struct out_key out_key_from_ip(uint32_t client, const IP&ip);
 
 } // namespace detail
 } /* namespace nat */

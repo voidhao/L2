@@ -17,7 +17,7 @@ bool lonlife_net::init(){
 }
 
 bool lonlife_net::start(){
-    netmap::open_dev("eth1", IPv4Address("10.0.0.1"));
+    netmap::open_dev("eth1", IPv4Address("10.0.0.105"));
     netmap::listen(IPv4Address("0.0.0.0"),
     		IPv4Address("0.0.0.0"),
     		IPPROTO_UDP, 4789,

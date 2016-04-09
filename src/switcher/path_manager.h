@@ -13,6 +13,8 @@ public:
 			return out_way;
 		case out_way:
 			return client_way;
+		default:
+			return 0;
 		}
 	}
 private:

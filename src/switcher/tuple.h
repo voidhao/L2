@@ -6,6 +6,7 @@
 #include <tins/tins.h>
 #include <common/limits.h>
 #include <common/errors.h>
+#include <arpa/inet.h>
 
 namespace switcher {
 
@@ -71,8 +72,9 @@ namespace switcher {
         	return vni();
         }
         uint32_t 	vni()const{
-        	int out = 0;
-        	memcpy(&out, vni_, 3);
+        	uint32_t out = 0;
+        	memcpy((char*)&out + 1, vni_, 3);
+        	out = ntohl(out);
         	return out;
         }
     	uint8_t		flags_{0};
