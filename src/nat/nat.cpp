@@ -3,7 +3,7 @@
 #include <nat/nat_session.h>
 #include <netinet/in.h>
 #include <nat/session_manager.h>
-#include <netmap/netmap.hpp>
+//#include <netmap/netmap.hpp>
 namespace nat {
 
 namespace detail{
@@ -44,7 +44,7 @@ error_t nat::nat_client_pkt(uint32_t client_id, uint32_t path, IP& ip){
 		udp->sport(nat->local_port_);
 	}
 	auto data = ip.serialize();
-	lonlife::netmap::sendto(IPv4Address("10.0.0.167"), data);
+//	lonlife::netmap::sendto(IPv4Address("10.0.0.167"), data);
 
 
 	return err::SUCCESS;
