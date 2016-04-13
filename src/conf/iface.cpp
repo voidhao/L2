@@ -3,6 +3,7 @@
 #include <fstream>
 #include <stdio.h>
 #include <conf/log.h>
+#include "SimpleIni.h"
 
 namespace conf{
 
@@ -26,6 +27,31 @@ string_vector read_iface(){
     }
     ifo.close();
     return std::move(ifaces);
+}
+
+ifaces read_ifaces(){
+	ifaces out;
+	CSimpleIniA ini;
+	auto err = ini.LoadFile(ifaces_file);
+	if (err != 0){
+		zlog_error(sys_log, "load %s failed", ifaces_file);
+		return out;
+	}
+	CSimpleIniA::TNamesDepend sections;
+	ini.GetAllSections(sections);
+	for(auto it = sections.begin(); it != sections.end(); it++){
+		auto v = ini.GetValue(it->pItem, "gateway");
+		try{
+			IPv4Address ip(v);
+			struct iface iface;
+			iface.name_ = it->pItem;
+			iface.gateway_ = ip;
+			out.push_back(iface);
+		}catch(std::exception&){
+			zlog_error(sys_log, "%s gateway %s invalid", it->pItem, v);
+		}
+	}
+	return out;
 }
 
 } // namespace conf
