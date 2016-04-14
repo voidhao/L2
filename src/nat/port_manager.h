@@ -26,6 +26,26 @@ private:
 	ports_set			inuse_udp_ports_;
 };
 
+template<typename T>
+struct get_port_t;
+template<>
+struct get_port_t<TCP>{
+	uint16_t operator()(port_manager& m)const{
+		return m.get_tcp_port();
+	}
+};
+template<>
+struct get_port_t<UDP>{
+	uint16_t operator()(port_manager& m)const{
+		return m.get_udp_port();
+	}
+};
+template<typename T>
+uint16_t get_port(port_manager& m){
+	get_port_t<T> mgr;
+	return mgr(m);
+}
+
 } // namespace detail
 } /* namespace nat */
 

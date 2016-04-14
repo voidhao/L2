@@ -32,6 +32,7 @@ using IP				= Tins::IP;
 using UDP				= Tins::UDP;
 using TCP				= Tins::TCP;
 using PDU				= Tins::PDU;
+using ICMP				= Tins::ICMP;
 using frame_ptr			= std::shared_ptr<Tins::EthernetII>;
 using IPv4Address		= Tins::IPv4Address;
 using EthernetII		= Tins::EthernetII;
@@ -52,7 +53,8 @@ private:
 #define likely(x)	__builtin_expect(!!(x), 1)
 #define unlikely(x)	__builtin_expect(!!(x), 0)
 #endif /* likely and unlikely */
-#define CHECK_NULL(pdu) {if(unlikely((pdu == nullptr))){return false;}};
+#define CHECK_NULL(pdu) {if(unlikely(((pdu) == nullptr))){return false;}}
+#define CHECK_PDU(pdu)  if(unlikely((pdu) == nullptr)){return;}
 
 
 #endif /* _COMM_DEF_H_ */

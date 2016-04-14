@@ -2,12 +2,5 @@
 
 namespace nat {
 
-//nat_session::nat_session(){
-//
-//}
-//
-//nat_session::~nat_session(){
-//
-//}
 
 } /* namespace nat */

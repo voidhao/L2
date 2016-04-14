@@ -13,7 +13,7 @@ public:
 	uint16_t	sport()const{return sport_;}
 	uint16_t	dport()const{return dport_;}
 	uint64_t	conn_id()const{return util::make_id(src_ip_, sport_);}
-	uint64_t	uid()const{return uid_;}
+	uint32_t	uid()const{return uid_;}
 	void		src_ip(IPv4Address ip){src_ip_ = ip;}
 	void		dst_ip(IPv4Address ip){dst_ip_ = ip;}
 	void		sport(uint16_t port){sport_ = port;}

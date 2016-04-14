@@ -33,7 +33,8 @@ namespace switcher {
         case switch_way:
         	break;
         case out_way:
-        	nat_->nat_client_pkt(sess->uid(), 1, tuple.inner_.ip_);
+        	EthernetII eth = EthernetII()/tuple.inner_.ip_;
+        	nat_->nat_out(IPv4Address("10.0.0.167"), sess->uid(), eth);
         	break;
         }
 
@@ -42,6 +43,8 @@ namespace switcher {
     }
 
     void switcher::on_nat_pkt(const byte_t *data, size_t size) {
+    	EthernetII eth(data, size);
+    	nat_->nat_in(eth);
         return;
     }
 

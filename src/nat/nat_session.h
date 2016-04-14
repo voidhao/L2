@@ -2,7 +2,7 @@
 #define _LONLIFE_NAT_NAT_SESSION_H_
 
 #include <comm_def.h>
-
+#include <netinet/in.h>
 namespace client{
 class session;
 }
@@ -23,6 +23,16 @@ struct nat_session :noncopyable{
 	uint16_t	icmp_seq_{0};
 	time_t		last_{time(NULL)};
 	time_t		remove_{0};
+
+	void update(){
+		last_ = time(NULL);
+	}
+	bool is_tcp_udp()const{
+		return (proto_ == IPPROTO_UDP) || (proto_ == IPPROTO_TCP);
+	}
+	bool is_icmp()const{
+		return (proto_ == IPPROTO_ICMP);
+	}
 };
 
 using nat_ptr = std::shared_ptr<nat_session>;

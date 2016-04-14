@@ -10,8 +10,7 @@
 namespace nat {
 namespace detail{
 port_manager::port_manager() {
-	// TODO Auto-generated constructor stub
-
+	init_ports();
 }
 
 port_manager::~port_manager() {
