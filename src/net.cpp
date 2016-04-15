@@ -16,6 +16,7 @@ lonlife_net::~lonlife_net(){
 }
 
 bool lonlife_net::init(){
+	switcher_->init();
 	return lonlife::netmap::init();
 }
 

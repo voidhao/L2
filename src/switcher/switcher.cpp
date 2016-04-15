@@ -18,6 +18,11 @@ namespace switcher {
 
     }
 
+    bool switcher::init(){
+    	nat_->switcher(this);
+    	return true;
+    }
+
     bool switcher::on_client_pkt(const byte_t *data, size_t size) {
         vxlan_tuple tuple;
         int e = tuple.fill(data, size);
@@ -44,12 +49,22 @@ namespace switcher {
 
     void switcher::on_nat_pkt(const byte_t *data, size_t size) {
     	EthernetII eth(data, size);
+//    	nat_->nat_pkt(data, size);
     	nat_->nat_in(eth);
         return;
     }
 
     void switcher::on_switcher_pkt(const byte_t *data, size_t size) {
         return;
+    }
+
+    void switcher::recv_nat_pkt(uint32_t uid, EthernetII& eth){
+    	auto& mgr = client_mgr_;
+    	auto client = client_mgr_->find_session(uid);
+    	if(!client){
+    		return;
+    	}
+    	client->send_to_client(eth);
     }
 
 } // namespace switcher

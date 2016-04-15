@@ -62,11 +62,12 @@ void client_manager::remove_session(uint64_t uid){
 	}
 }
 
-session_ptr client_manager::make_session(IPv4Address src, uint16_t port, uint64_t uid){
+session_ptr client_manager::make_session(IPv4Address src, uint16_t port, uint64_t uid, const switcher::vxlan_meta& meta){
 	auto sess = std::make_shared<session>();
 	sess->src_ip(src);
 	sess->sport(port);
 	sess->uid(uid);
+	sess->meta_ = meta;
 	add_session(sess);
 	return sess;
 }

@@ -34,6 +34,8 @@ public:
     // 合法数据送到NAT逻辑
     void on_nat_pkt(const byte_t* data, size_t size);
 
+    void recv_nat_pkt(uint32_t client, EthernetII& eth);
+
     bool init();
     bool start();
     void stop();

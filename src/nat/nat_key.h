@@ -23,7 +23,7 @@ struct nat_key{
 		uint16_t	icmp_seq_;
 	};
 	uint32_t	client_{0};
-	uint8_t		proto_{0};
+	uint32_t	proto_{0};
 
 
 	bool operator == (const nat_key& rhs)const{
@@ -39,7 +39,10 @@ struct nat_key{
 		size_t* v2 = (size_t*)&sport_;
 		return (*v1)|(*v2);
 	}
-
+	nat_key(){
+		memset(this, 0, sizeof(nat_key));
+	}
+	~nat_key(){}
 	bool is_tcp_udp()const{
 		return (proto_ == IPPROTO_UDP) || (proto_ == IPPROTO_TCP);
 	}
@@ -112,7 +115,8 @@ struct hash<nat::detail::nat_key>{
 template<>
 struct equal_to<nat::detail::nat_key>{
 	bool operator()(const nat::detail::nat_key& lhs, const nat::detail::nat_key& rhs)const{
-		return lhs == rhs;
+		bool e = (lhs == rhs);
+		return (lhs == rhs);
 	}
 };
 

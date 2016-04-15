@@ -3,7 +3,7 @@
 
 #include <comm_def.h>
 #include <common/util.h>
-
+#include <switcher/tuple.h>
 namespace client{
 
 class session;
@@ -24,13 +24,13 @@ public:
 		auto& meta = tuple.meta_;
 		auto sess = find_session(outer.src_addr(), outer.sport());
 		if(!sess){
-			sess =  make_session(outer.src_addr(), outer.sport(), meta.uid());
+			sess =  make_session(outer.src_addr(), outer.sport(), meta.uid(), meta);
 		}
 		sess->update();
 		return sess;
 	}
 private:
-	session_ptr make_session(IPv4Address src, uint16_t port, uint64_t uid);
+	session_ptr make_session(IPv4Address src, uint16_t port, uint64_t uid, const switcher::vxlan_meta& meta);
 	mutable std::mutex	session_mutex_;
 	session_map			conn_to_session_;
 	session_map			uid_to_session_;

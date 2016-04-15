@@ -1,5 +1,5 @@
 #include "client.h"
-
+#include <netmap/netmap.h>
 namespace client{
 
 bool session::operator == (const session& rhs)const{
@@ -16,6 +16,10 @@ bool session::operator != (const session& rhs)const{
 			(dport_ != rhs.dport_);
 }
 
+size_t session::send_to_client(EthernetII& inner){
+	auto eth = EthernetII()/IP(IPv4Address("10.0.0.27"), IPv4Address("10.0.0.167"))/UDP(sport_, 4789)/Tins::RawPDU((const uint8_t*)&meta_, sizeof(meta_)) / inner;
+	return lonlife::netmap::send(IPv4Address("10.0.0.167"), eth);
+}
 } // namespace client
 
 

@@ -3,7 +3,7 @@
 
 #include <comm_def.h>
 #include <common/util.h>
-
+#include <switcher/tuple.h>
 namespace client{
 
 class session:noncopyable{
@@ -27,6 +27,8 @@ public:
 	std::atomic_size_t& rx_size(){return rx_size_;}
 	std::atomic_size_t& tx(){return tx_;}
 	std::atomic_size_t& tx_size(){return tx_size_;}
+	size_t		send_to_client(EthernetII& eth);
+	switcher::vxlan_meta 		meta_;
 private:
 	IPv4Address		src_ip_;
 	IPv4Address		dst_ip_;
@@ -40,6 +42,7 @@ private:
 	std::atomic_size_t rx_size_{0};
 	std::atomic_size_t tx_{0};					// 下行
 	std::atomic_size_t tx_size_{0};
+//	switcher::vxlan_meta 		meta_;
 };
 
 using session_ptr = std::shared_ptr<session>;
