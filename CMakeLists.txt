@@ -1,7 +1,7 @@
-cmake_minimum_required(VERSION 2.0)
+cmake_minimum_required(VERSION 2.5)
 project(L2)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -g -ggdb -std=c++11")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0 -Wall -g -ggdb -std=c++11")
 
 include_directories(
         /usr/local/include
@@ -14,47 +14,17 @@ link_directories(
         /opt/local/lib
 )
 
-set(SOURCE_FILES
-    src/client/client.h
-    src/client/client_manager.cpp
-    src/client/client_manager.h
-    src/client/pkt_handler.cpp
-    src/client/pkt_handler.h
-    src/client/session.cpp
-    src/client/session.h
-    src/common/errors.h
-    src/common/limits.h
-    src/common/reassembler.h
-    src/common/util.h
-    src/common/vxlan.h
-    src/conf/conf.cpp
-    src/conf/conf.h
-    src/conf/ConvertUTF.c
-    src/conf/ConvertUTF.h
-    src/conf/iface.cpp
-    src/conf/iface.h
-    src/conf/log.cpp
-    src/conf/log.h
-    src/conf/SimpleIni.h
-    src/dataflow/meta_data.h
-    src/netmap/arp.hpp
-    src/netmap/device.hpp
-    src/netmap/devices.hpp
-    src/netmap/fwd.hpp
-    src/netmap/listener.hpp
-    src/netmap/netmap.hpp
-    src/netmap/nic.hpp
-    src/netmap/send.hpp
-    src/netmap/statistics.hpp
-    src/switcher/switcher.cpp
-    src/switcher/switcher.h
-    src/switcher/tuple.h
-    src/comm_def.h
-    src/global.h
-    src/init.cpp
-    src/init.h
-    src/nat/session_manager.cpp
-    src/main.cpp src/switcher/directions.h)
+AUX_SOURCE_DIRECTORY("./src/netmap" netmap_files)
+AUX_SOURCE_DIRECTORY("./src/nat" nat_files)
+AUX_SOURCE_DIRECTORY("./src/switcher" switcher_files)
+AUX_SOURCE_DIRECTORY("./src/client" client_files)
+AUX_SOURCE_DIRECTORY("./src" root_files)
+AUX_SOURCE_DIRECTORY("./src/conf" conf_files)
 
-add_executable(L2 ${SOURCE_FILES})
+add_executable(L2 ${netmap_files}
+        ${nat_files}
+        ${switcher_files}
+        ${client_files}
+        ${conf_files}
+        ${root_files})
 target_link_libraries(L2 tins zlog)
