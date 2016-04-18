@@ -19,7 +19,7 @@ namespace switcher {
     }
 
     bool switcher::init(){
-    	nat_->switcher(this);
+    	nat_->handler(std::bind(&switcher::recv_nat_pkt, this, _1, _2));
     	return true;
     }
 
@@ -59,9 +59,8 @@ namespace switcher {
     }
 
     void switcher::recv_nat_pkt(uint32_t uid, EthernetII& eth){
-    	auto& mgr = client_mgr_;
     	auto client = client_mgr_->find_session(uid);
-    	if(!client){
+    	if(unlikely(!client)){
     		return;
     	}
     	client->send_to_client(eth);

@@ -5,7 +5,6 @@
 #include <nat/session_manager.h>
 #include <nat/nat_key.h>
 #include <netmap/netmap.h>
-#include <switcher/switcher.h>
 namespace nat {
 
 using nat_ptr = std::shared_ptr<nat_session>;
@@ -27,7 +26,9 @@ void nat::nat_in(EthernetII& eth){
 	}else{
 		remove_nat(nat);
 	}
-	switcher_->recv_nat_pkt(nat->client_id_, eth);
+	if(likely(nat_handler_)){
+		nat_handler_(nat->client_id_, eth);
+	}
 }
 
 void nat::nat_out(IPv4Address l, uint32_t client, EthernetII& eth){

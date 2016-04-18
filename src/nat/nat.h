@@ -1,26 +1,23 @@
 #ifndef _LONLIFE_NAT_NAT_H_
 #define _LONLIFE_NAT_NAT_H_
 
+#include <functional>
 #include <comm_def.h>
 #include <nat/nat_key.h>
 #include <nat/nat_session.h>
 #include <nat/session_manager.h>
 
-namespace switcher{
-
-class switcher;
-
-} // namespace switcher
-
 namespace nat {
+
+using NATHandler = std::function<void(int, EthernetII&)>;
 
 class nat:noncopyable{
 public:
 	void nat_out(IPv4Address l, uint32_t client, EthernetII& eth);
 	void nat_in(EthernetII& eth);
 	void timeout();
-	void switcher(switcher::switcher* sw){
-		switcher_ = sw;
+	void handler(NATHandler h){
+		nat_handler_ = h;
 	}
 public:
 	nat();
@@ -44,7 +41,7 @@ private:
 	}
 private:
 	detail::session_manager			nat_mgr_;
-	switcher::switcher*				switcher_{nullptr};
+	NATHandler						nat_handler_;
 };
 
 } /* namespace nat */
