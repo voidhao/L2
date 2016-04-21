@@ -39,9 +39,9 @@ bool read_gateway() {
 	CSimpleIniA::TNamesDepend sections, keys, values;
 	ini.GetAllSections(sections);
 	CSimpleIniA::TNamesDepend::const_iterator s, k, v;
-	std::vector<std::string> tmp;
 	for (s = sections.begin(); s != sections.end(); ++s)
 	{
+		std::vector<std::string> tmp;
 		ini.GetAllKeys(s->pItem, keys);
 		for (k = keys.begin(); k != keys.end(); ++k)
 		{
